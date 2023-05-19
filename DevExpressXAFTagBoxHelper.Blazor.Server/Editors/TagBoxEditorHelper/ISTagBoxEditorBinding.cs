@@ -8,7 +8,7 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
     public class ISTagBoxEditorBinding<T> : IDisposable where T : class
     {
         ISBindingList<ISTagBoxEditorDataItem<T>> myChoosenItemsBindingList;
-        ISBindingList<ISTagBoxEditorDataItem<T>> myDataBindingList;
+        ISBindingList<ISTagBoxEditorDataItem<T>> myDataBindingList = new();
         DxTagBoxAdapter myEditorAdapter;
 
         private bool myIsUpdating = false;
@@ -28,9 +28,6 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
 
             BeginUpdate();
             mySelectedValues = selectedValues;
-
-            myDataBindingList = new();
-
             AddPredefinedValuesToDataBindingList(predefinedValues);
             CreateChoosenItemsBindingList();
             AddSelectedValuesThoChoosenItemsBindingList();
