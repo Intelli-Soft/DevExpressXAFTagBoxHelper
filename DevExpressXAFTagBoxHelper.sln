@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevExpressXAFTagBoxHelper.Module", "DevExpressXAFTagBoxHelper.Module\DevExpressXAFTagBoxHelper.Module.csproj", "{2FF951C8-B8CA-49A8-AE73-E6B93A1BD3EF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevExpressXAFTagBoxHelper.Blazor.Server", "DevExpressXAFTagBoxHelper.Blazor.Server\DevExpressXAFTagBoxHelper.Blazor.Server.csproj", "{6192D410-546F-409A-9F39-E1667D5A89B3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		EasyTest|Any CPU = EasyTest|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2FF951C8-B8CA-49A8-AE73-E6B93A1BD3EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FF951C8-B8CA-49A8-AE73-E6B93A1BD3EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FF951C8-B8CA-49A8-AE73-E6B93A1BD3EF}.EasyTest|Any CPU.ActiveCfg = EasyTest|Any CPU
+		{2FF951C8-B8CA-49A8-AE73-E6B93A1BD3EF}.EasyTest|Any CPU.Build.0 = EasyTest|Any CPU
+		{2FF951C8-B8CA-49A8-AE73-E6B93A1BD3EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FF951C8-B8CA-49A8-AE73-E6B93A1BD3EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6192D410-546F-409A-9F39-E1667D5A89B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6192D410-546F-409A-9F39-E1667D5A89B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6192D410-546F-409A-9F39-E1667D5A89B3}.EasyTest|Any CPU.ActiveCfg = EasyTest|Any CPU
+		{6192D410-546F-409A-9F39-E1667D5A89B3}.EasyTest|Any CPU.Build.0 = EasyTest|Any CPU
+		{6192D410-546F-409A-9F39-E1667D5A89B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6192D410-546F-409A-9F39-E1667D5A89B3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
