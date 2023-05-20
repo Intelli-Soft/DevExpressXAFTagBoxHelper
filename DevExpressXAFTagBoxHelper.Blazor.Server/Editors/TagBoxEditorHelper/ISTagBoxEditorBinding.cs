@@ -209,14 +209,12 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
             }
 
             myChoosenItemsBindingList.ListChanged -= ChoosenItemsBindingListChanged;
+            myChoosenItemsBindingList.Removed -= ChoosenItemsBindingListRemoved;
             myChoosenItemsBindingList.Clear();
-
-            if (myDataBindingList != null)
-            {
-                myDataBindingList.Removed -= DataBindingListRemoved;
-                myDataBindingList.ListChanged -= DataBindingListChanged;
-                myDataBindingList.Clear();
-            }
+            myDataBindingList.Removed -= DataBindingListRemoved;
+            myDataBindingList.ListChanged -= DataBindingListChanged;
+            myDataBindingList.Clear();
+           
         }
 
         public void Editor(ISTagBoxPropertyEditor tagBoxPropertyEditor)
