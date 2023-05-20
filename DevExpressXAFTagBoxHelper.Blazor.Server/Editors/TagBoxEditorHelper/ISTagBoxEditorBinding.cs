@@ -7,7 +7,7 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
 {
     public class ISTagBoxEditorBinding<T> : IDisposable where T : class
     {
-        ISBindingList<ISTagBoxEditorDataItem<T>> myChoosenItemsBindingList;
+        ISBindingList<ISTagBoxEditorDataItem<T>> myChoosenItemsBindingList = new();
         ISBindingList<ISTagBoxEditorDataItem<T>> myDataBindingList = new();
         DxTagBoxAdapter myEditorAdapter;
 
@@ -21,7 +21,7 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
             IList<ISTagBoxEditorDataItem<T>> predefinedValues,
             IList<ISTagBoxEditorDataItem<T>> selectedValues = null)
         {
-            if((predefinedValues == null) || (predefinedValues.Count == 0))
+            if (predefinedValues == null || predefinedValues.Count == 0)
             {
                 return;
             }
@@ -44,7 +44,7 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
 
         private void AddPredefinedValuesToDataBindingList(IList<ISTagBoxEditorDataItem<T>> predefinedValues)
         {
-            foreach(var locPredefinedValue in predefinedValues)
+            foreach (var locPredefinedValue in predefinedValues)
             {
                 myDataBindingList.Add(locPredefinedValue);
             }
@@ -52,9 +52,9 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
 
         private void AddSelectedValuesThoChoosenItemsBindingList()
         {
-            if(mySelectedValues != null)
+            if (mySelectedValues != null)
             {
-                foreach(var locSelectedValue in mySelectedValues)
+                foreach (var locSelectedValue in mySelectedValues)
                 {
                     myChoosenItemsBindingList.Add(locSelectedValue);
                 }
@@ -64,15 +64,17 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
 
         private void ChoosenItemsBindingListChanged(object sender, ListChangedEventArgs e)
         {
-            if(e.ListChangedType == ListChangedType.ItemAdded)
+            if (e.ListChangedType == ListChangedType.ItemAdded)
             {
-                if(DataItemAdded != null)
+                if (DataItemAdded != null)
                 {
                     ISTagBoxEditorDataItem<T> locCurrentItem = myChoosenItemsBindingList.ElementAt(e.NewIndex);
-                    DataItemAdded(locCurrentItem);
+                    DataItemAdded?.Invoke(locCurrentItem);
+
                 }
                 SetValues();
-            } else if(e.ListChangedType == ListChangedType.ItemDeleted)
+            }
+            else if (e.ListChangedType == ListChangedType.ItemDeleted)
             {
                 SetValues();
             }
@@ -81,14 +83,13 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
 
         private void ChoosenItemsBindingListRemoved(ISTagBoxEditorDataItem<T> deletedItem)
         {
-            if(DataItemRemoved != null)
+            if (DataItemRemoved != null)
                 DataItemRemoved(deletedItem);
         }
 
 
         private void CreateChoosenItemsBindingList()
         {
-            myChoosenItemsBindingList = new();
             myChoosenItemsBindingList.ListChanged += ChoosenItemsBindingListChanged;
             myChoosenItemsBindingList.Removed += ChoosenItemsBindingListRemoved;
         }
@@ -96,10 +97,9 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
 
         private void DataBindingListChanged(object sender, ListChangedEventArgs e)
         {
-            if(e.ListChangedType == ListChangedType.ItemAdded)
+            if (e.ListChangedType == ListChangedType.ItemAdded)
             {
                 ISTagBoxEditorDataItem<T> locCurrentItem = myDataBindingList.ElementAt(e.NewIndex);
-                DataItemAdded?.Invoke(locCurrentItem);
             }
         }
 
@@ -115,28 +115,29 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
                 .ToList()
                 .Except(locEditorValues);
 
-            foreach(var locItemToDelete in locDifferences.ToList())
+            foreach (var locItemToDelete in locDifferences.ToList())
             {
                 var locItemToRemove = myChoosenItemsBindingList.Where(
                     locChoosenItem => locChoosenItem.Key.ToString() == locItemToDelete)
                     .FirstOrDefault();
-                if(locItemToRemove != null)
+                if (locItemToRemove != null)
                     myChoosenItemsBindingList.Remove(locItemToRemove);
             }
 
-            foreach(var locItemToAdd in locEditorValues)
+            foreach (var locItemToAdd in locEditorValues)
             {
                 var locFoundItem = myChoosenItemsBindingList.Where(
                     locDataBindingList => locDataBindingList.Key.ToString() == locItemToAdd)
                     .FirstOrDefault();
 
-                if(locFoundItem == null)
+                if (locFoundItem == null)
                 {
                     try
                     {
                         var locGenericType = (T)Convert.ChangeType(locItemToAdd, typeof(T));
                         myChoosenItemsBindingList.Add(new(locGenericType, locItemToAdd, string.Empty));
-                    } catch(Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         throw new Exception(ex.Message, ex);
                     }
@@ -145,11 +146,11 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
         }
 
         private DxTagBoxModel<ISTagBoxEditorDataItem<T>, string> GetEditorAdapterComponentModel()
-        { return ((DxTagBoxModel<ISTagBoxEditorDataItem<T>, string>)myEditorAdapter.ComponentModel); }
+        { return (DxTagBoxModel<ISTagBoxEditorDataItem<T>, string>)myEditorAdapter.ComponentModel; }
 
         private void SetData()
         {
-            if(myEditorAdapter != null && myIsUpdating == false)
+            if (myEditorAdapter != null && myIsUpdating == false)
             {
                 GetEditorAdapterComponentModel().Data = myDataBindingList;
                 GetEditorAdapterComponentModel().ValueFieldName = nameof(ISTagBoxEditorDataItem<T>.Key);
@@ -160,25 +161,27 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
 
         private void SetValues()
         {
-            if(myEditorAdapter != null && myIsUpdating == false)
+            if (myEditorAdapter != null && myIsUpdating == false)
 
             {
-                var locChoosenItems = (from myDataItem in myDataBindingList
-                    where myChoosenItemsBindingList.Any(locChoosenItem => locChoosenItem.Key == myDataItem.Key)
-                    select myDataItem).ToList();
-                GetEditorAdapterComponentModel().Values = locChoosenItems.Select(
-                    locChoosenItem => locChoosenItem.Key.ToString())
-                    .ToList();
+                if (myChoosenItemsBindingList?.Count > 0)
+                {
+                    var locChoosenItems = myDataBindingList.IntersectBy(myChoosenItemsBindingList.Select(locChoosenItem => locChoosenItem.Key), locAllItem => locAllItem.Key);
 
-                GetEditorAdapterComponentModel().Tags = locChoosenItems.Select(
-                    locChoosenItem => locChoosenItem.DisplayText)
-                    .ToList();
+                    GetEditorAdapterComponentModel().Values = locChoosenItems.Select(
+                        locChoosenItem => locChoosenItem.Key.ToString())
+                        .ToList();
+
+                    GetEditorAdapterComponentModel().Tags = locChoosenItems.Select(
+                        locChoosenItem => locChoosenItem.DisplayText)
+                        .ToList();
+                }
             }
         }
 
         public void AddDataItem(ISTagBoxEditorDataItem<T> itemToAdd)
         {
-            if(myDataBindingList.Contains(itemToAdd) == false)
+            if (myDataBindingList.Contains(itemToAdd) == false)
             {
                 myDataBindingList.Add(itemToAdd);
                 SetData();
@@ -187,7 +190,7 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
 
         public void AddItemToChoose(ISTagBoxEditorDataItem<T> valueToAdd)
         {
-            if(myChoosenItemsBindingList.Contains(valueToAdd) == false)
+            if (myChoosenItemsBindingList.Contains(valueToAdd) == false)
             {
                 myChoosenItemsBindingList.Add(valueToAdd);
                 SetValues();
@@ -199,7 +202,7 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
 
         public void Dispose()
         {
-            if(myEditorAdapter != null)
+            if (myEditorAdapter != null)
             {
                 myEditorAdapter.ValueChanged -= EditorValueChanged;
                 myEditorAdapter = null;
@@ -208,7 +211,7 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
             myChoosenItemsBindingList.ListChanged -= ChoosenItemsBindingListChanged;
             myChoosenItemsBindingList.Clear();
 
-            if(myDataBindingList != null)
+            if (myDataBindingList != null)
             {
                 myDataBindingList.Removed -= DataBindingListRemoved;
                 myDataBindingList.ListChanged -= DataBindingListChanged;
@@ -218,18 +221,19 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
 
         public void Editor(ISTagBoxPropertyEditor tagBoxPropertyEditor)
         {
-            if(myEditorAdapter == null)
+            if (myEditorAdapter == null)
             {
                 myEditorAdapter = (DxTagBoxAdapter)tagBoxPropertyEditor.Control;
 
-                if(myDataBindingList == null)
+                if (myDataBindingList == null)
                 {
                     myDataBindingList = new();
-                    foreach(var locTagBoxEditorDataItem in EditorData())
+                    foreach (var locTagBoxEditorDataItem in EditorData())
                     {
                         myDataBindingList.Add(locTagBoxEditorDataItem);
                     }
-                } else
+                }
+                else
                     SetData();
 
 
@@ -244,10 +248,10 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
 
         public IEnumerable<ISTagBoxEditorDataItem<T>> EditorData()
         {
-            if(myEditorAdapter != null)
+            if (myEditorAdapter != null)
             {
                 var locDataValues = GetEditorAdapterComponentModel().Data.ToList();
-                foreach(var locTagBoxEditorDataItem in locDataValues)
+                foreach (var locTagBoxEditorDataItem in locDataValues)
                 {
                     yield return new ISTagBoxEditorDataItem<T>(
                         locTagBoxEditorDataItem.Key,
@@ -260,10 +264,10 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
 
         public IEnumerable<string> EditorValues()
         {
-            if(myEditorAdapter != null)
+            if (myEditorAdapter != null)
             {
                 var locCurrentValues = GetEditorAdapterComponentModel().Values;
-                foreach(var locItem in locCurrentValues)
+                foreach (var locItem in locCurrentValues)
                 {
                     yield return locItem;
                 }
@@ -279,21 +283,21 @@ namespace DevExpressXAFTagBoxHelper.Blazor.Server.Editors.TagBoxEditorHelper
 
         public void RemoveChoosenItem(ISTagBoxEditorDataItem<T> itemToRemove)
         {
-            if(myChoosenItemsBindingList.Any(locChoosenItem => locChoosenItem.Key == itemToRemove.Key))
+
+            if (myChoosenItemsBindingList.Any(locData => locData.Key.ToString() == itemToRemove.Key.ToString()))
             {
-                var locItemToRemove = myChoosenItemsBindingList.Where(
-                    locChoosenItem => locChoosenItem.Key == itemToRemove.Key)
-                    .Single();
+                var locItemToRemove = myChoosenItemsBindingList.Where(locData => locData.Key.ToString() == itemToRemove.Key.ToString()).Single();
                 myChoosenItemsBindingList.Remove(locItemToRemove);
                 SetValues();
             }
+
         }
 
         public void RemoveDataItem(ISTagBoxEditorDataItem<T> itemToRemove)
         {
-            if(myDataBindingList.Any(locData => locData.Key == itemToRemove.Key))
+            if (myDataBindingList.Any(locData => locData.Key.ToString() == itemToRemove.Key.ToString()))
             {
-                var locItemToRemove = myDataBindingList.Where(locData => locData.Key == itemToRemove.Key).Single();
+                var locItemToRemove = myDataBindingList.Where(locData => locData.Key.ToString() == itemToRemove.Key.ToString()).Single();
                 myDataBindingList.Remove(locItemToRemove);
                 SetData();
             }
